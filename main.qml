@@ -18,7 +18,7 @@ ApplicationWindow {
     property var campos: [campo1, campo2, campo3, campo4, campo5, campo6]
     property int campoAlvo: 0
     property var numeroSorteado: geraNumeroSorteado()
-    property var listaOpcoesOK: []
+    property int tentativas: 1
 
     function geraNumeroSorteado() {
         var numeros = [0,1,2,3,4,5,6,7,8,9];
@@ -31,13 +31,20 @@ ApplicationWindow {
 
     function resetAll() {
         for(var i=0; i<btnsId.children.length; i++){
-            if(!!btnsId.children[i].text && listaOpcoesOK.indexOf(btnsId.children[i].text) === -1)
+            if(!!btnsId.children[i].text)
                 btnsId.children[i].enabled = true
         }
         for(var j=0; j<campos.length; j++){
-            if(campos[j].checkColor === Material.color(Material.Red))
-                campos[j].value = ""
+            campos[j].value = ""
+            campos[j].checkColor = Material.color(Material.Grey)
+
         }
+        if(tentativas === 100){
+            tentativas = 1
+            numeroSorteado = geraNumeroSorteado()
+        }
+        tentativas++
+        root.forceActiveFocus()
     }
 
     function verificaSeGanhou(){
@@ -47,7 +54,6 @@ ApplicationWindow {
         for(var i = 0; i < campos.length; i++){
             if(campos[i].value === numeroSorteado.toString()[i]){
                 campos[i].checkColor = Material.color(Material.Green)
-                listaOpcoesOK.push(campos[i].value)
             } else {
                 campos[i].checkColor = Material.color(Material.Red)
             }
@@ -81,19 +87,18 @@ ApplicationWindow {
         }
     }
 
-    Rectangle {
-        width: 100
-        height: width
-        color: "red"
-        MouseArea {
-            anchors.fill: parent
-            onClicked: tecladoId.visible = true
-        }
-    }
+//    Rectangle {
+//        width: 100
+//        height: width
+//        color: "red"
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: tecladoId.visible = true
+//        }
+//    }
 
     Rectangle {
         id: root
-//        color: "red"
         width: parent.width
         height: parent.height * 0.5
         anchors.horizontalCenter: parent.horizontalCenter
@@ -104,7 +109,6 @@ ApplicationWindow {
         Keys.onPressed: {
             if(event.key === Qt.Key_Plus)
                 tecladoId.visible = true
-//            tecladoId.y = tecladoId.y-tecladoId.height
         }
 
         RowLayout {
