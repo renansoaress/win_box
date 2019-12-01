@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setStyle("Material");
 
-
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
